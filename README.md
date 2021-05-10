@@ -1,9 +1,10 @@
-# Bastis Branch
+# Tugays Branch
 
-Auf diesem Branch werden die Lösungen zu den Übungsaufgaben von Basti eingecheckt.
-Dieser Branch beinhaltet wahrscheinlich **nicht** die Files zur Präsentation.
+Auf diesem Branch werden alle Lösungen für Sprach-, und Programmierkonzepte hochgeladen. Hier wird jedoch vorwiegend Sandbox mäßig mit Hasekll herumgespielt, bis die Syntax verinnerlicht ist. 
 
 # Aufgabe 1:
+
+# Die erste Aufgabe stammt von Basti. Ich habe Teile des Codes von Basti nachprogrammiert um die Sytax zu verstehen. 
 
 ## Ziel
 Ziel der ersten Übungsaufgabe ist es, sich mit der grundlegenden Syntax von Haskell vertraut zu machen. Darüber hinaus soll der Umgang mit Rekursion und unendlich langen Listen geübt werden. Alle Lösungen zu diesen Aufgaben lassen sich leicht durch Recherche auf Stackoverflow finden, dies ist aber nicht der Übung. Es geht darum zu üben Probleme funktional zu lösen.
