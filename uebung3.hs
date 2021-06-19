@@ -18,8 +18,15 @@ singleton v = Singleton v
 -- To-Do: Stelle sicher, dass es nur für einen Intervall auch nur ein Intervall-Wert Paar gibt
 insert :: Ord k => k -> k -> v -> IntervalMap k v -> IntervalMap k v
 insert x y v (Singleton defaultValue) = IntervalMap [((Intervall x y), v)] defaultValue
-insert x y v (IntervalMap xs defaultValue) = IntervalMap (xs ++ [((Intervall x y), v)]) defaultValue
+insert x y v (IntervalMap xs defaultValue) = IntervalMap ((remove x y xs) ++ [((Intervall x y), v)]) defaultValue
 
+remove :: Ord k => k -> k -> [(Intervall k k, v)] -> [(Intervall k k, v)]
+remove x y [] = []
+remove x y ((Intervall a b, v):xs) | x < a && y > b = remove x y xs 						-- liegt innerhalb der range und wird entfernt					
+                                   | a < x && y > b = remove x y xs ++ [(Intervall a x, v)] -- der anfang liegt nicht innerhalb in der range
+								   | x < a && b > y = remove x y xs ++ [(Intervall y b, v)] -- das ende liegt nicht innerhalb in der range
+								   | a < x && b > y = remove x y xs ++ [(Intervall a x, v)] ++ [(Intervall y b, v)] -- der anfang und das ende liegt nicht innerhalb in der range
+								   
 -- das wird benutzt, damit wir funktionen anwenden können auf eine IntervalMap
 -- instance Functor (IntervalMap k) where
 
