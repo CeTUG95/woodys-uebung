@@ -10,9 +10,12 @@ singleton v = Singleton v
 
 -- Ord erstmal nur für Singleton / IntervalMap fehlt noch
 (!) :: Ord k => IntervalMap k v -> k -> v
-(!) (Singleton v) x = v
+(!) (Singleton v) inputValue = v
+(!) (IntervalMap [] defaultValue) inputValue = defaultValue 
+(!) (IntervalMap ((Intervall a b, v) : xs) defaultValue) inputValue | inputValue >= a && inputValue <= b = v 
+																    | otherwise = (!) (IntervalMap xs defaultValue) inputValue
 
--- da Datentypen nicht veränderbar sind, muss hier eine neue IntervallMap zurückgegeben werden
+-- To-Do: Stelle sicher, dass es nur für einen Intervall auch nur ein Intervall-Wert Paar gibt
 insert :: Ord k => k -> k -> v -> IntervalMap k v -> IntervalMap k v
 insert x y v (Singleton defaultValue) = IntervalMap [((Intervall x y), v)] defaultValue
 insert x y v (IntervalMap xs defaultValue) = IntervalMap (xs ++ [((Intervall x y), v)]) defaultValue
