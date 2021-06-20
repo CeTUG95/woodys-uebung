@@ -28,12 +28,28 @@ remove x y ((Intervall a b, v):xs) | x <= a && y >= b = remove x y xs 						-- l
 								   | a <= x && b >= y = remove x y xs ++ [(Intervall a x, v)] ++ [(Intervall y b, v)] -- der anfang und das ende liegt nicht innerhalb in der range
 								   
 -- das wird benutzt, damit wir funktionen anwenden können auf eine IntervalMap
--- Hier gibt es einen Case, der fehlt...
+-- der letzte Fall soltle nicht funktionieren, weil wir die Liste ja wegwerfen ?!?!?!
 instance Functor (IntervalMap k) where
 	fmap f (Singleton v) = Singleton (f v)
-	fmap f (IntervalMap [((Intervall a b), v)] defaultValue) = IntervalMap [((Intervall a b), (f v))] (f defaultValue)
-	
+	fmap f (IntervalMap [] defaultValue) = IntervalMap [] (f defaultValue)
+	fmap f (IntervalMap (((Intervall a b), v):xs) defaultValue) = IntervalMap [((Intervall a b), (f v))] (f defaultValue)
+
 -- das wird benutzt um Operationen aneinanderzuhängen
--- instance Ord k => Applicative (IntervalMap k) where
--- 	pure f = f k 
---	(IntervalMap k) f g <*> = IntervalMap [((Intervall a b), (f g v))] (f g defaultValue)
+-- Hab das hier gebruteforced, funktioniert irgendwie
+instance Ord k => Applicative (IntervalMap k) where
+ 	pure f = Singleton (f)
+	(<*>) (IntervalMap k g) b = (fmap g b)
+	
+
+a = singleton 'a' :: IntervalMap Int Char
+b = insert 10 20 'b' a
+c = insert 9 21 'c' b
+d = insert 5 15 'd' c
+e = insert 14 22 'e' d
+f = insert 10 19 'f' e
+g = fmap fromEnum f
+h = "Hello" <$ g
+i = insert 5 10 110 $ insert 10 15 90 $ singleton 100 :: IntervalMap Int Int
+j = insert 5 10 (-) $ insert 10 15 (*) $ singleton (+) :: IntervalMap Int (Int -> Int -> Int)
+k = insert 3 18 2 $ singleton 10 :: IntervalMap Int Int
+l = j <*> i <*> k
