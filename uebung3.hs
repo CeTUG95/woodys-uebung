@@ -32,13 +32,12 @@ remove x y ((Intervall a b, v):xs) | a >= y && b >= y = remove x y xs ++ [(Inter
 -- Wahrscheinlich darf ich hier nicht die Funkion auf f defaultValue anwenden. Aber ich bin mir nicht sicher wie ich das mache, weil er dann sich beschwert
 instance Functor (IntervalMap k) where
 	fmap f (Singleton v) = Singleton (f v)
-	fmap f (IntervalMap [((Intervall a b), v)] defaultValue) = IntervalMap [((Intervall a b), (f v))] (f defaultValue)
-	fmap f (IntervalMap (((Intervall a b), v):xs) defaultValue) = IntervalMap [((Intervall a b), (f v))] (f defaultValue)
+	fmap f (IntervalMap liste defaultValue) = IntervalMap [((Intervall a b), (f v)) | ((Intervall a b), v) <- liste ] (f defaultValue)
 
 -- Hab das hier gebruteforced, funktioniert irgendwie
 instance Ord k => Applicative (IntervalMap k) where
  	pure f = Singleton (f)
-	(<*>) (IntervalMap k g) b = (fmap g b)
+	(<*>) (IntervalMap k v) b =  (fmap v b)
 	
 
 a = singleton 'a' :: IntervalMap Int Char
@@ -47,7 +46,7 @@ c = insert 9 21 'c' b
 d = insert 5 15 'd' c
 e = insert 14 22 'e' d
 f = insert 10 19 'f' e
-g = fmap fromEnum f -- Hier werden manchmal Werte zu Default Werten
+g = fmap fromEnum f
 h = "Hello" <$ g
 i = insert 5 10 110 $ insert 10 15 90 $ singleton 100 :: IntervalMap Int Int
 j = insert 5 10 (-) $ insert 10 15 (*) $ singleton (+) :: IntervalMap Int (Int -> Int -> Int)
