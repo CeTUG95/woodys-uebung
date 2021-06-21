@@ -51,5 +51,5 @@ h = "Hello" <$ g
 i = insert 5 10 110 $ insert 10 15 90 $ singleton 100 :: IntervalMap Int Int
 j = insert 5 10 (-) $ insert 10 15 (*) $ singleton (+) :: IntervalMap Int (Int -> Int -> Int)
 k = insert 3 18 2 $ singleton 10 :: IntervalMap Int Int
-l = j <*> i <*> k -- Folgefehler vom Funktor denke ich.
+l = j <*> i <*> k -- Applikativer Funktor funktioniert noch nicht ganz
 
