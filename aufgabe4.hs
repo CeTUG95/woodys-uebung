@@ -13,6 +13,14 @@ data Address = Address
 getAddress :: Address -> String
 getAddress (Address firstName lastName street housenumber zipcode town telephone) = firstName ++ "," ++ lastName ++ "," ++ street ++ "," ++ housenumber ++ "," ++ zipcode ++ "," ++ town ++ "," ++ telephone ++ "\n"
 
+-- readAddress soll aus einem Komma-seperierten String eine Addresse machen
+-- wir brauchen eine Methode um den String bei den Kommas aufzutrennen und anschließend in den Konstruktor für Address zu geben
+-- zb: String zu List of String zu Address?
+--readAddress :: String -> Address
+--readAddress addrString =
+
+
+
 main = do
     -- Datei festlegen
     let file = "addresses.txt"
