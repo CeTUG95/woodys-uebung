@@ -1,0 +1,5 @@
+Lysline;Tchounda;;13353 Berlin;
+Peter;Friedrich;Berlinerstrasse 1;12345 Berlin;010210120
+Mehmet;Sentuerk;Koppelweg 1;12347 Berlin;015140013610
+Meier;Mustermann;Musterstrasse 1;12345 Musterstadt;0800123456
+Fatih;Bas;Senftenberger Ring 83;13435 Berlin;015253217057
