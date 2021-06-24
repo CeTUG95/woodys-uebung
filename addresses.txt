@@ -1,1 +1,1 @@
-Testi,McTestface,Teststraße,1a,12345,Testtown,0123456789
+Testo;McTestface;Teststrasse;41;42424;Teststadt;1234567890
