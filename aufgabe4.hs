@@ -1,5 +1,7 @@
 module Main where
 import System.IO
+import Data.List
+import qualified Data.Text as Text
 
 -- deklaration des files
 file = "addresses.txt"
@@ -17,7 +19,36 @@ data Adresse = Adresse
     } deriving (Ord, Eq, Show)
 
 getAdresse :: Adresse -> String
-getAdresse (Adresse vorname nachname strasse hausnummer plz stadt telefon) = vorname ++ ";" ++ nachname ++ ";" ++ strasse ++ ";" ++ hausnummer ++ ";" ++ plz ++ ";" ++ stadt ++ ";" ++ telefon ++ "\n"
+getAdresse (Adresse vorname nachname strasse hausnummer plz stadt telefon) = vorname ++ ";" ++ nachname ++ ";" ++ strasse ++ ";" ++ hausnummer ++ ";" ++ plz ++ ";" ++ stadt ++ ";" ++ telefon
+
+getValue :: String -> Int -> String
+getValue [] index = ""
+getValue string index = do
+    let list = map Text.unpack $ Text.splitOn (Text.pack ";") (Text.pack string)
+    list!!index
+
+printAdresse :: String -> IO()
+printAdresse [] = putStrLn ""
+printAddresse addr = do
+    let vorname = getValue addr 0
+    let nachname = getValue addr 1
+    let strasse = getValue addr 2
+    let hausnummer = getValue addr 3
+    let stadt = getValue addr 4
+    let telefon = getValue addr 5
+    putStrLn ("Vorname:\t" ++ vorname)
+    putStrLn ("Nachname:\t" ++ nachname)
+    putStrLn ("Straße:\t\t" ++ strasse)
+    putStrLn ("Hausnummer:\t" ++ hausnummer)
+    putStrLn ("Stadt:\t\t" ++ stadt)
+    putStrLn ("Telefon:\t" ++ telefon ++ "\n")
+
+printAdressListe :: [String] -> IO()
+printAdressListe [] = return ()
+printAdressListe (x:xs) = do
+    printAddresse x
+    printAdressListe xs
+
 
 main :: IO()
 main = do
@@ -55,7 +86,9 @@ main = do
             telefon <- getLine
             -- neue Adresse erstellen
             let adresseNeu = Adresse vorname nachname strasse hausnummer plz stadt telefon
-            appendFile file (getAdresse adresseNeu)
+            appendFile file ((getAdresse adresseNeu) ++ "\n")
+            -- das newline sorgt dummerweise dafür dass es immer eine Zeile mehr im File gibt als es Addressen gibt.
+            -- Das führt zu dem Fehler, dass beim lesen aller Kontakte bei 4. das Programm immer einen leeren Kontakt printed
             putStrLn "\nAdresse gespeichert.\n"
             main
 
@@ -69,6 +102,12 @@ main = do
 
         4 -> do
             putStrLn "Alle Kontakte:"
+            putStrLn "------------------------------------\n"
+            adressenRaw <- readFile file
+            let list = map Text.unpack $ Text.splitOn (Text.pack "\n") (Text.pack adressenRaw)
+            printAdressListe list
+            putStrLn "------------------------------------"
+
             main
 
         5 -> do
@@ -85,33 +124,3 @@ main = do
         _ -> do
             putStrLn "Fehler: Ungueltige Eingabe! Bitte waehle eine Zahl von 1 bis 7."
             main
-
-
-    -- -- Dateiinhalt lesen und in variable Speichern
-    -- addresses <- readFile file -- ohne zwischenschritt zwischen Lesen und schreiben, ist die Datei noch "locked"
-    -- putStrLn ("Alte Datei:\n" ++ addresses)
-    --
-    -- -- neue Addresse deklarieren und in die Datei schreiben
-    -- let addr = Address "Testo" "Testodor" "Testweg" "999" "54321" "Testdorf" "0198765432"
-    -- writeFile file (addresses ++ getAddress addr)
-    --
-    -- -- erneut auslesen und printen
-    -- newAddresses <- readFile file
-    -- putStrLn ("Neue Datei:\n" ++ newAddresses)
-
-
-
-
-
--- Konzept:
--- in do Block:
---      - Abfrage was man tun möchte:
---          - 1 = Hinzufügen
---          - 2 = Löschen
---          - 3 = Editieren
---          - 4 = Alle anzeigen
---          - 5 = nach Vornamen suchen
---          - 6 = nach Nachnamen suchen
--- nach jeder dieser Operationen schreibzugriff auf Datei um neuen Stand abzuspeichern
--- ich weiß noch nicht wie genau das umgesetzt wird mit den unterschiedlichen Zahlen, die zu den Aktionen führen sollen
--- andere Idee vielleicht besser?

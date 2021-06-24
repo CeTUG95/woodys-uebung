@@ -25,3 +25,6 @@ cabal.project.local~
 
 # executeables
 aufgabe4
+
+# adress-"datenbank"
+addresses.txt
