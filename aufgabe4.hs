@@ -143,10 +143,39 @@ main = do
 
         5 -> do
             putStrLn "Kontakt mit Vornamen suchen:"
+            putStrLn "------------------------------------\n"
+            putStr "Vornamen eingeben: "
+            vornameInput <- getLine
+            let lVornameInput = [vornameInput]
+            adressenRaw <- readFile file
+            let lAdressZeilen = lines adressenRaw -- Liste der Adresszeilen
+            let lVornamen = map (cutString ';') (lines adressenRaw) -- Liste der Vornamen
+            let lIndices = map (`elemIndices` lVornamen) lVornameInput
+            let lIndex = head lIndices
+            putStrLn "Suchergebnisse:"
+            printAdressListe $ map (lAdressZeilen !!) lIndex
+            putStrLn "------------------------------------\n"
             main
 
         6 -> do
             putStrLn "Kontakt mit Nachnamen suchen:"
+            putStrLn "------------------------------------\n"
+            putStr "Nachname eingeben: "
+            nachnameInput <- getLine
+            let lNachnameInput = [nachnameInput] -- umwandeln in Liste für einfacheres Handling danach
+            adressenRaw <- readFile file
+            let lAdressZeilen = lines adressenRaw -- Liste aller Adresszeilen
+            let lAdressString = map (map Text.unpack . Text.splitOn (Text.pack ";") . Text.pack) lAdressZeilen
+            let lAdressNamen = map tail lAdressString
+            let lNachnamen = map head lAdressNamen
+            putStrLn ("lAdressString: " ++ show lAdressString)
+            putStrLn ("lAdressNamen: " ++ show lAdressNamen)
+            putStrLn ("lNachnamen: " ++ show lNachnamen)
+            let lIndices = map (`elemIndices` lNachnamen) lNachnameInput
+            let lHeadIndices = head lIndices
+            putStrLn "Suchergebnisse:"
+            printAdressListe $ map (lAdressZeilen !!) lHeadIndices
+            putStrLn "------------------------------------\n"
             main
 
         7 -> do
