@@ -1,5 +1,7 @@
 module Main where
 import System.IO
+import Control.Monad
+import Data.Functor
 import Data.List
 import qualified Data.Text as Text
 
@@ -27,6 +29,9 @@ getValue string index = do
     let list = map Text.unpack $ Text.splitOn (Text.pack ";") (Text.pack string)
     list!!index
 
+deleteAdresse indexPerson text = firstIndex ++ lastIndex
+    where (firstIndex, _:lastIndex) = splitAt indexPerson text
+
 printAdresse :: String -> IO()
 printAdresse [] = putStrLn ""
 printAddresse addr = do
@@ -49,6 +54,17 @@ printAdressListe (x:xs) = do
     printAddresse x
     printAdressListe xs
 
+-- String anhand eines characters auseinander schneiden
+cutString :: Char-> String-> String
+cutString _ [] = []
+cutString c (x:xs) | c==x = []
+                    | otherwise = x:cutString c xs
+
+-- neue Zeile nach Zeile aus Liste von Zeilen erstellen
+createNewLine :: [String] -> String
+createNewLine [] = ""
+createNewLine [x] = x
+createNewLine ( x:xs ) = x ++  "\n" ++ createNewLine xs
 
 main :: IO()
 main = do
@@ -94,6 +110,21 @@ main = do
 
         2 -> do
             putStrLn "Kontakt loeschen:"
+            putStrLn "------------------------------------\n"
+            putStr "Vornamen eingeben: "
+            vornameInput <- getLine
+            let lVornameInput = [vornameInput]
+            adressenRaw <- readFile file
+            let lAdressZeilen = lines adressenRaw -- Liste der Adresszeilen
+            let lVornamen = map (cutString ';') (lines adressenRaw) -- Liste der Vornamen
+            let lIndices = map (`elemIndices` lVornamen) lVornameInput
+            let lIndex = head lIndices
+            let lDelete = deleteAdresse (head $ head lIndices) lAdressZeilen
+            let delete = filter (not . null) lDelete
+            when (length (delete) > 0) $
+                writeFile file (createNewLine delete)
+            putStrLn ("Der Kontakt " ++ vornameInput ++ " wurde gelöscht!")
+            putStrLn "------------------------------------\n"
             main
 
         3 -> do
