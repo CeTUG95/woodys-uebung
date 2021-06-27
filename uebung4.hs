@@ -173,8 +173,6 @@ kontaktEditieren = do
 					let adresseNeu = Adresse vornameToAdd nachnameToAdd strasseToAdd hausnummerToAdd plzToAdd stadtToAdd telefonToAdd
 										
 					-- delete and add
-					-- crasht wenn es nicht die letzte Adresse ist ...
-					adressenRaw <- readFile file
 					let lAdressZeilen = lines adressenRaw -- Liste der Adresszeilen
 					let lVornamen = map (cutString ';') (lines adressenRaw) -- Liste der Vornamen
 					let lIndices = map (`elemIndices` lVornamen) lVornameInput
